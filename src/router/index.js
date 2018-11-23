@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import RecordManage from '@/components/RecordManage'
+import AddStage from '@/components/AddStage'
 Vue.use(Router)
 
 export default new Router({
@@ -8,8 +8,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'RecordManage',
-      component: RecordManage
+      name: 'AddStage',
+      component: AddStage
     }
   ]
 })
