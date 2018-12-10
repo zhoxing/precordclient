@@ -2,7 +2,7 @@
   <div id="recordManage">
     <el-container>
       <el-header>
-        小标提醒:当前还有<span>{{count}}</span>个目标没有完成哦!我还是不是你最爱的宝宝了||_||
+        小愿提醒:当前还有<span>100</span>个愿望没有实现哦!我还是不是你最爱的宝宝了||_||
       </el-header>
       <el-main>
         <el-row>
@@ -162,7 +162,6 @@ export default {
         }]
       },
       goalList: [],
-      count: 0,
       currentPage: 1,
       pageSize: 10
     }
@@ -174,7 +173,6 @@ export default {
     }).then((response) => {
       if (response.data.flag === 'success') {
         this.goalList = response.data.goalList
-        this.count = response.data.count
       }
     }).catch((err) => {
       console.log(err)

@@ -1,14 +1,16 @@
 <template>
   <div class="hello">
-    <h1 @click="show = !show">{{ msg }}</h1>
+    <h1 @click="show = !show">{{ title }}</h1>
     <div>
       <el-collapse-transition>
 
         <div v-show="show">
           <div class="transition-box">
-            <el-form status-icon label-position="right"
-                     :rules="rules"  validate-on-rule-change
+            <span style="color: #f56c6c">{{message}}</span>
+            <el-form  label-position="right"
+                     :rules="rules"
                      ref="form" :model="form" label-width="80px">
+
               <el-form-item label="用户名" prop="userId">
                 <el-input v-model="form.userId"></el-input>
               </el-form-item>
@@ -34,7 +36,8 @@ export default {
   data () {
     return {
       show: true,
-      msg: '进入我的人生',
+      title: '进入我的人生',
+      message: '',
       form: {
         userId: '',
         password: ''
@@ -46,14 +49,31 @@ export default {
         ],
         password: [
           {required: true, message: '请输入密码', trigger: 'blur'},
-          {min: 1, max: 16, message: '长度在 0 到 16 个字符', trigger: ['blur', 'change']}
+          {min: 1, max: 16, message: '长度在 1 到 16 个字符', trigger: ['blur', 'change']}
         ]
       }
     }
   },
   methods: {
     onSubmit () {
-      console.log('submit!')
+      this.$axios({
+        method: 'post',
+        url: '/personalGoals/login',
+        params: {
+          userId: this.form.userId,
+          password: this.form.password
+        }
+      }).then((response) => {
+        if (response.data.flag === 'success') {
+          this.message = ''
+          this.$router.push({path: '/index', query: {nickName: response.data.user.nickName, createTime: response.data.user.createTime}})
+        } else if (response.data.flag === 'fail') {
+          this.message = response.data.message
+        }
+      }).catch((err) => {
+        console.log(err)
+        this.message = '请稍后再试!'
+      })
     }
   }
 

@@ -5,8 +5,11 @@
         <div>
           <h2>主人信息</h2>
           <p>用户名:</p>
+          <span>{{nickName}}</span>
           <p>参与时间:</p>
+          <span>{{createTime}}</span>
           <p>消息:</p>
+          <span>{{message}}</span>
         </div>
       </el-aside>
       <el-container>
@@ -14,36 +17,23 @@
             主人,您来了!今天也是美好的一天哦!请继续努力!
         </el-header>
         <el-main>
-          <el-row>
-            <el-col :span="8" >
+            <ul>
+              <li v-for="module in queryModuleList" :key="module.modIdd"
+                  style="list-style-type: none;width: 30%;height:100px;float: left;margin-bottom: 170px;margin-right: 10px;">
               <el-card :body-style="{ padding: '0px' }" shadow="hover">
-                <img src="../../static/images/if.jpg" class="image" >
+                <img :src="require('../../static/images/img'+module.modIdd+'.jpg')" class="image" >
                 <div style="padding: 14px;">
-                  <span>目标管理</span>
-                  <el-button style="float: right; padding: 3px 0" type="text">进入</el-button>
+                  <span>{{module.modName}}</span>
+                  <el-button style="float: right; padding: 3px 0" type="text" @click="enter(module.modIdd)">进入</el-button>
                 </div>
                 <div class="text item">
-                  我们命定的目标和道路，不是享乐，也不是受苦；而是行动，在每个明天，都要比今天前进一步。——朗费罗<br>
-                  如果你想要快乐，设定一个目标，这个目标要能指挥你的思想，释放你的能量，激发你的希望。——安德鲁•卡耐基
+                  {{module.wisdom}}
                 </div>
               </el-card>
-            </el-col>
-            <el-col :span="8" >
-              <el-card :body-style="{ padding: '0px' }" shadow="hover">
-                <img src="../../static/images/dance.jpg" class="image">
-                <div style="padding: 14px;">
-                  <span>愿望清单管理</span>
-                  <el-button style="float: right; padding: 3px 0" type="text">进入</el-button>
-                </div>
-                <div class="text item">
-                  人类的心理统统就是这样，而且，似乎永远是这样；愈是得不到手的东西，就愈是想得到它，而且在实现这一愿望的过程中所遇到的困难愈大，奋斗的意志就愈是坚强。 —— 乔万尼奥里<br>
-                  光有知识是不够的，还应当运用；光有愿望是不够的，还应当行动。 —— 歌德
-                </div>
-              </el-card>
-            </el-col>
-          </el-row>
+              </li>
+            </ul>
         </el-main>
-        <el-footer>Footer</el-footer>
+        <el-footer>开发人员:小星星  开发时间:2018年11月19日</el-footer>
       </el-container>
     </el-container>
   </div>
@@ -55,12 +45,29 @@ export default {
   data () {
     return {
       show: true,
-      msg: '首页'
+      msg: '首页',
+      nickName: this.$route.query.nickName,
+      createTime: this.$route.query.createTime,
+      message: '您有三个未读消息',
+      queryModuleList: []
     }
   },
+  mounted: function () {
+    // this.$nextTick(function () {})
+    this.$axios({
+      method: 'post',
+      url: '/personalGoals/index'
+    }).then((response) => {
+      if (response.data.flag === 'success') {
+        this.queryModuleList = response.data.queryModuleList
+      }
+    }).catch((err) => {
+      this.$message.error(err)
+    })
+  },
   methods: {
-    onSubmit () {
-      console.log('submit!')
+    enter (key) {
+      this.$router.push({path: '/manage' + key, query: {modIdd: key}})
     }
   }
 
@@ -94,7 +101,7 @@ export default {
 
 .image{
   height: 120px;
-  width: 450px;
+  width: 350px;
 }
 .el-header, .el-footer {
   background-color: #B3C0D1;

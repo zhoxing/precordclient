@@ -8,12 +8,12 @@ module.exports = {
   dev: {
 
     // Paths
-    assetsSubDirectory: 'precordclient',
+    assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {},
 
     // Various Dev Server settings
-    host: '192.169.128.164', // can be overwritten by process.env.HOST
+    host: 'localhost', // can be overwritten by process.env.HOST
     port: 8081, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: true,
     errorOverlay: true,
@@ -44,6 +44,7 @@ module.exports = {
   },
 
   build: {
+
     // Template for index.html
     index: path.resolve(__dirname, '../dist/index.html'),
 
