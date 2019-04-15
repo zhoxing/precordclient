@@ -49,7 +49,8 @@ export default {
       nickName: this.$route.query.nickName,
       createTime: this.$route.query.createTime,
       message: '您有三个未读消息',
-      queryModuleList: []
+      queryModuleList: [],
+      clientHeight: ''
     }
   },
   mounted: function () {
@@ -67,30 +68,14 @@ export default {
   },
   methods: {
     enter (key) {
-      this.$router.push({path: '/manage' + key, query: {modIdd: key}})
+      this.$router.push({path: '/nav', name: 'nav', params: {modIdd: key, nickName: this.nickName}})
     }
   }
-
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.el-carousel__item h3 {
-  color: #475669;
-  font-size: 14px;
-  opacity: 0.75;
-  line-height: 150px;
-  margin: 0;
-}
-
-.el-carousel__item:nth-child(2n) {
-  background-color: #99a9bf;
-}
-
-.el-carousel__item:nth-child(2n+1) {
-  background-color: #d3dce6;
-}
 .text {
   font-size: 14px;
 }
@@ -103,8 +88,9 @@ export default {
   height: 120px;
   width: 350px;
 }
+
 .el-header, .el-footer {
-  background-color: #B3C0D1;
+  background-color: #182431;
   color: #3d8380;
   text-align: center;
   line-height: 60px;
@@ -113,10 +99,9 @@ export default {
 }
 
 .el-aside {
-  background-color: #D3DCE6;
+  background-color: #182431;
   color: #3d8380;
   text-align: center;
-  min-height: 600px;
   line-height: 30px;
 }
 
@@ -124,9 +109,5 @@ export default {
   background-color: #E9EEF3;
   color: #333;
   text-align: center;
-}
-
-body > .el-container {
-  margin-bottom: 40px;
 }
 </style>

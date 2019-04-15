@@ -1,10 +1,7 @@
 <template>
     <div id="addGoal">
       <el-container>
-        <el-header>
-          <img :src="require('../../static/images/header001.jpg')" width="100%" height="100%"/>
-        </el-header>
-        <el-main>
+        <el-main class="goalMain">
           <div class="add">
           <el-row>
             <el-col :span="24" class="title">新建目标</el-col>
@@ -39,7 +36,7 @@
             <el-form-item>
               <el-button type="primary" @click="submitForm('goalForm')">下一步</el-button>
               <el-button @click="resetForm('goalForm')">重置</el-button>
-              <el-button @click="$router.back(-1)">返回</el-button>
+              <el-button @click="returnNav">返回</el-button>
             </el-form-item>
           </el-form>
           </div>
@@ -51,6 +48,7 @@
 <script>
 export default {
   name: 'AddGoal',
+  props: ['name'],
   data () {
     const checkSetDate = (rule, value, callback) => {
       if (!value) {
@@ -139,7 +137,7 @@ export default {
                 message: '目标成功添加,继续下一步阶段设置!',
                 type: 'success'
               })
-              this.$router.push({path: '/addStage', query: {goalNum: response.data.goalNum}})
+              this.$router.push({path: '/addStage', query: {goalNum: response.data.goalNum, nickName: this.$route.params.name}})
             }
           }).catch((err) => {
             this.$message.error(err)
@@ -152,18 +150,22 @@ export default {
     },
     resetForm (formName) {
       this.$refs[formName].resetFields()
+    },
+    returnNav () {
+      this.$router.push({path: '/nav', name: 'nav', params: {modIdd: '001', nickName: this.$route.params.name}})
     }
   }
 }
 </script>
 
-<style >
+<style scoped>
 .add{
   padding: 20px;
-  border: 1px solid #B3C0D1;
+  border: 1px solid #282e35;
   width: 40%;
   margin-left: 30%;
-  background-color: #b6d4e2;
+  color: #ffffff;
+  background-color: #869a9673;
 }
 
 .title{
@@ -172,26 +174,15 @@ export default {
   font-size: 20px;
 }
 
-.el-header {
-  background-color: #B3C0D1;
-  color: #3d8380;
-  text-align: center;
-  min-height: 100px;
-  font-size: large;
-  font-weight: bold;
-  padding: 0;
-}
-
-.el-main {
-  background-color: #E9EEF3;
+.goalMain {
   color: #333;
   text-align: center;
-  height: 500px;
+  height: 600px;
+  background: url('../../static/images/dong1.gif')  no-repeat;
+  background-size:100% 100%;
 }
-  .el-form-item__content{
-    text-align: left;
-  }
-  .el-select{
-    width: 100%;
-  }
+
+.el-select{
+  width: 100%;
+}
 </style>

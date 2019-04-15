@@ -13,6 +13,7 @@ Vue.config.productionTip = false
 
 /* axios.defaults.timeout = 10000 */
 axios.defaults.baseURL = 'http://localhost:8080/api'
+
 Vue.prototype.$axios = axios
 /* eslint-disable no-new */
 new Vue({

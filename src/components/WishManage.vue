@@ -1,140 +1,125 @@
 <template>
-  <div id="recordManage">
-    <el-container>
-      <el-header>
-        小愿提醒:当前还有<span>100</span>个愿望没有实现哦!我还是不是你最爱的宝宝了||_||
-      </el-header>
-      <el-main>
-        <el-row>
-          <div class="main-header">目标管理</div>
-        </el-row>
-        <el-row>
-          <el-col :span="6">
-            <span>设定日期:</span>
-            <el-date-picker
-              v-model="setDate"
-              align="right"
-              type="date" value-format="yyyy-MM-dd"
-              placeholder="选择日期"
-              :picker-options="pickerOptions">
-            </el-date-picker>
-          </el-col>
-          <el-col :span="6">
-            <span>目标名称:</span>
-            <el-input style="width: auto" placeholder="请输入目标名称" v-model="goalName" clearable></el-input>
-          </el-col>
-          <el-col :span="6">
-            <span>目标级别:</span>
-            <el-select style="width: 70%" v-model="goalLevel" clearable placeholder="请选择">
-              <el-option
-                v-for="item in levelList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-col>
-          <el-col :span="6">
-            <span>完成状态:</span>
-            <el-select style="width: 70%" v-model="completeStatus" clearable placeholder="请选择">
-              <el-option
-                v-for="item in statusList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-col>
-        </el-row>
-        <el-row type="flex" class="row-bg" justify="end">
-          <router-link to="/addGoal">
-          <el-button type="primary" class="goal-button" icon="el-icon-plus">
-            新增
-          </el-button>
-          </router-link>
-          <el-button type="primary" class="goal-button" icon="el-icon-edit" @click="toEditGoal">
-            编辑
-          </el-button>
-          <el-button type="primary" class="goal-button" icon="el-icon-search" @click="queryGoalList">
-            查询
-          </el-button>
-        </el-row>
-        <el-table  highlight-current-row @current-change="handleCurrent"
-          :data="goalList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
-          style="width: 100%"
-          :row-class-name="tableRowClassName">
-          <el-table-column
-            prop="goalNum"
-            label="目标编号"
-            width="180">
-          </el-table-column>
-          <el-table-column
-            prop="goalName"
-            label="目标名称"
-            width="180">
-          </el-table-column>
-          <el-table-column :formatter="levelFormat"
-            prop="goalLevel"
-            label="目标级别">
-          </el-table-column>
-          <el-table-column :formatter="statusFormat"
-            prop="completeStatus"
-            label="完成状态">
-          </el-table-column>
-          <el-table-column :formatter="dateFormat"
-            prop="setDate"
-            label="目标拟定时间">
-          </el-table-column>
-          <el-table-column :formatter="dateFormat"
-            prop="preDate"
-            label="目标预计完成时间">
-          </el-table-column>
-        </el-table>
-      </el-main>
-    </el-container>
+  <div id="wishManage">
+    <el-row>
+      <div class="main-header">愿望清单管理</div>
+    </el-row>
+    <el-row>
+      <el-col :span="8">
+        <span>许愿日期:</span>
+        <el-date-picker
+          v-model="wishDate"
+          align="right"
+          type="date" value-format="yyyy-MM-dd"
+          placeholder="选择日期"
+          :picker-options="pickerOptions">
+        </el-date-picker>
+      </el-col>
+      <el-col :span="8">
+        <span>完成状态:</span>
+        <el-select style="width: 60%" v-model="wishStatus" clearable placeholder="请选择">
+          <el-option
+            v-for="item in statusList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-col>
+      <el-col :span="8">
+        <el-button type="primary" class="goal-button" icon="el-icon-plus" @click="addWish">
+          新增
+        </el-button>
+        <el-button type="primary" class="goal-button" icon="el-icon-edit" @click="updateWish">
+          编辑
+        </el-button>
+        <el-button type="primary" class="goal-button" icon="el-icon-search" @click="queryWishList">
+          查询
+        </el-button>
+      </el-col>
+    </el-row>
+    <el-table  highlight-current-row @current-change="handleCurrent" ref="singleTable"
+               :data="wishList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+               style="width: 100%"
+               :row-class-name="tableRowClassName">
+      <el-table-column
+        prop="wishId"
+        label="愿望编号"
+        width="180">
+      </el-table-column>
+      <el-table-column :formatter="dateFormat"
+                       prop="wishDate"
+                       label="许愿日期"
+                       width="180">
+      </el-table-column>
+      <el-table-column
+        prop="wishContent"
+        label="许愿内容">
+      </el-table-column>
+      <el-table-column :formatter="statusFormat"
+                       prop="wishStatus"
+                       label="完成状态">
+      </el-table-column>
+    </el-table>
     <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="currentPage"
       :page-sizes="[5, 10, 20, 40]"
-    :page-size="pageSize"
-    layout="total, sizes, prev, pager, next, jumper"
-    :total="goalList.length">
+      :page-size="pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="wishList.length">
     </el-pagination>
+    <el-dialog :title="title" :visible.sync="dialogFormVisible" :show-close="false" center>
+      <el-form :model="wishForm" :rules="rules" ref="wishForm" >
+        <el-form-item label="许愿内容" prop="wishContent" :label-width="formLabelWidth">
+          <el-input type="textarea" :disabled="edit" maxlength="100" placeholder="填写内容" v-model="wishForm.wishContent" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="完成状态" prop="wishStatus" :label-width="formLabelWidth">
+          <el-select v-model="wishForm.wishStatus" placeholder="请选择状态">
+            <el-option label="未完成" value="0"></el-option>
+            <el-option label="已完成" value="1"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="mergeSubmit('wishForm')">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'GoalManage',
+  name: 'WishManage',
   data () {
     return {
-      setDate: null,
-      goalName: '',
-      goalLevel: '',
-      completeStatus: '',
-      levelList: [{
-        value: '1',
-        label: '重要'
-      }, {
-        value: '2',
-        label: '一般'
-      }, {
-        value: '3',
-        label: '较小'
-      }],
+      wishDate: '',
+      wishStatus: '',
+      dialogFormVisible: false,
+      title: '',
+      edit: false,
+      message: '',
+      wishForm: {
+        wishId: null,
+        wishContent: '',
+        wishStatus: ''
+      },
+      rules: {
+        wishContent: [
+          {required: true, message: '请输入内容', trigger: 'blur'}
+        ],
+        wishStatus: [
+          {required: true, message: '请选择状态', trigger: 'blur'}
+        ]
+      },
+      formLabelWidth: '120px',
       statusList: [{
+        value: '0',
+        label: '未完成'
+      }, {
         value: '1',
-        label: '未开始'
-      }, {
-        value: '2',
-        label: '进行中'
-      }, {
-        value: '3',
         label: '已完成'
-      }, {
-        value: '4',
-        label: '已暂停'
       }],
       pickerOptions: {
         disabledDate (time) {
@@ -161,7 +146,7 @@ export default {
           }
         }]
       },
-      goalList: [],
+      wishList: [],
       currentPage: 1,
       pageSize: 10
     }
@@ -169,10 +154,11 @@ export default {
   mounted () {
     this.$axios({
       method: 'post',
-      url: '/personalGoals/queryGoalList'
+      url: '/personalGoals/queryWishList'
     }).then((response) => {
       if (response.data.flag === 'success') {
-        this.goalList = response.data.goalList
+        this.wishList = response.data.wishList
+        this.$emit('count', response.data.count)
       }
     }).catch((err) => {
       console.log(err)
@@ -180,27 +166,16 @@ export default {
   },
   methods: {
     tableRowClassName ({row, rowIndex}) {
-      if (row.completeStatus === '1') {
+      if (row.wishStatus === '0') {
         return 'warning-row'
-      } else if (row.completeStatus === '3') {
+      } else if (row.wishStatus === '1') {
         return 'success-row'
       }
       return ''
     },
     handleCurrent (val) {
-      this.currentRow = val
-    },
-    toEditGoal () {
       console.log(this.currentRow)
-      if (this.currentRow === undefined) {
-        this.$message({
-          message: '未获取到对象',
-          type: 'warning',
-          customClass: 'msgStyle'
-        })
-        return
-      }
-      this.$router.push({path: '/editGoal', query: {goalNum: this.currentRow.goalNum, goalName: this.currentRow.goalName, goalLevel: this.currentRow.goalLevel, completeStatus: this.currentRow.completeStatus, setDate: this.currentRow.setDate, preDate: this.currentRow.preDate}})
+      this.currentRow = val
     },
     dateFormat (row, column, cellValue, index) {
       const daterc = row[column.property]
@@ -213,26 +188,12 @@ export default {
         return timeFormat
       }
     },
-    levelFormat (row, column, cellValue, index) {
-      const level = row[column.property]
-      if (level === '1') {
-        return '重要'
-      } else if (level === '2') {
-        return '一般'
-      } else if (level === '3') {
-        return '较小'
-      }
-    },
     statusFormat (row, column, cellValue, index) {
       const status = row[column.property]
-      if (status === '1') {
-        return '未开始'
-      } else if (status === '2') {
-        return '进行中'
-      } else if (status === '3') {
+      if (status === '0') {
+        return '未完成'
+      } else if (status === '1') {
         return '已完成'
-      } else if (status === '4') {
-        return '已暂停'
       }
     },
     handleSizeChange: function (size) {
@@ -241,46 +202,82 @@ export default {
     handleCurrentChange: function (currentPage) {
       this.currentPage = currentPage
     },
-    queryGoalList: function () {
+    queryWishList: function () {
       this.$axios({
         method: 'post',
-        url: '/personalGoals/queryGoalList',
+        url: '/personalGoals/queryWishList',
         params: {
-          setDate: this.setDate,
-          goalName: this.goalName,
-          goalLevel: this.goalLevel,
-          completeStatus: this.completeStatus
+          wishDate: this.wishDate,
+          wishStatus: this.wishStatus
         }
       }).then((response) => {
         if (response.data.flag === 'success') {
-          this.goalList = response.data.goalList
+          this.wishList = response.data.wishList
         }
       }).catch((err) => {
         this.$message.error(err)
+      })
+    },
+    addWish: function () {
+      this.dialogFormVisible = true
+      this.title = '新增愿望'
+      this.edit = false
+      this.message = '愿望成功添加,祝主人早日实现!'
+      this.wishForm.wishId = null
+      this.wishForm.wishContent = ''
+      this.wishForm.wishStatus = ''
+    },
+    updateWish: function () {
+      if (this.currentRow === undefined || this.currentRow === null) {
+        this.$message({
+          message: '未获取到对象',
+          type: 'warning',
+          customClass: 'msgStyle'
+        })
+        return
+      }
+      this.dialogFormVisible = true
+      this.title = '修改愿望状态'
+      this.edit = true
+      this.message = '愿望状态修改成功!'
+      this.wishForm.wishId = this.currentRow.wishId
+      this.wishForm.wishContent = this.currentRow.wishContent
+      this.wishForm.wishStatus = this.currentRow.wishStatus
+    },
+    mergeSubmit: function (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$axios({
+            method: 'post',
+            url: '/personalGoals/addOrUpdateWish',
+            params: {
+              wishForm: this.wishForm
+            }
+          }).then((response) => {
+            if (response.data.flag === 'success') {
+              this.$message({
+                message: this.message,
+                type: 'success'
+              })
+              this.currentRow = null
+              this.dialogFormVisible = false
+              this.queryWishList()
+            } else {
+              this.$message.error(response.data.message)
+            }
+          }).catch((err) => {
+            this.$message.error(err)
+          })
+        } else {
+          this.$message.error('error submit!!')
+          return false
+        }
       })
     }
   }
 }
 </script>
-
 <style>
-  .el-header, .el-footer {
-    background-color: #B3C0D1;
-    color: #3d8380;
-    text-align: center;
-    line-height: 60px;
-    font-size: large;
-    font-weight: bold;
-  }
-
-  .el-main {
-    background-color: #E9EEF3;
-    color: #333;
-    text-align: center;
-    height: 500px;
-
-  }
-
   .main-header {
     color: #039be5;
     font-weight: bold;

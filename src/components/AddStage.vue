@@ -1,10 +1,7 @@
 <template>
     <div id="addStage">
       <el-container>
-        <el-header>
-          <img :src="require('../../static/images/header001.jpg')" width="100%" height="100%"/>
-        </el-header>
-        <el-main>
+        <el-main class="stageMain">
           <div class="add">
             <el-row>
               <el-col :span="24" class="title">新增阶段</el-col>
@@ -77,7 +74,8 @@ export default {
                 message: '阶段添加完成!回到目标管理页面',
                 type: 'success'
               })
-              this.$router.push({path: '/manage001'})
+              console.log(this.$route.query.nickName)
+              this.$router.push({path: '/nav', name: 'nav', params: {modIdd: '001', nickName: this.$route.query.nickName}})
             }
           }).catch((err) => {
             console.log(err)
@@ -123,42 +121,31 @@ export default {
 }
 </script>
 
-<style >
-  .add{
-    padding: 20px;
-    border: 1px solid #B3C0D1;
-    width: 40%;
-    margin-left: 30%;
-    background-color: #b6d4e2;
-  }
+<style scoped>
+.add{
+  padding: 20px;
+  border: 1px solid #282e35;
+  width: 40%;
+  margin-left: 30%;
+  color: #ffffff;
+  background-color: #869a9673;
+}
 
-  .title{
-    margin-top: 20px;
-    margin-bottom: 20px;
-    font-size: 20px;
-  }
+.title{
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-size: 20px;
+}
 
-  .el-header {
-    background-color: #B3C0D1;
-    color: #3d8380;
-    text-align: center;
-    min-height: 100px;
-    font-size: large;
-    font-weight: bold;
-  }
+.stageMain {
+  color: #333;
+  text-align: center;
+  height: 600px;
+  background: url('../../static/images/dong1.gif')  no-repeat;
+  background-size:100% 100%;
+}
 
-  .el-main {
-    background-color: #E9EEF3;
-    color: #333;
-    text-align: center;
-    height: 500px;
-  }
-
-  .el-form-item__content{
-    text-align: left;
-  }
-  .el-select{
-    width: 100%;
-  }
-
+.el-select{
+  width: 100%;
+}
 </style>

@@ -1,10 +1,7 @@
 <template>
     <div id="editGoal">
       <el-container>
-        <el-header>
-          <img :src="require('../../static/images/header001.jpg')" width="100%" height="100%"/>
-        </el-header>
-        <el-main>
+        <el-main class="goalMain">
           <div class="add">
           <el-row>
             <el-col :span="24" class="title">编辑目标</el-col>
@@ -37,7 +34,7 @@
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="submitForm('goalForm')">完成</el-button>
-              <el-button @click="$router.back(-1)">返回</el-button>
+              <el-button @click="returnNav">返回</el-button>
             </el-form-item>
           </el-form>
           </div>
@@ -46,12 +43,12 @@
     </div>
 </template>
 
-<script>
+<script >
 export default {
   name: 'EditGoal',
   data () {
     const checkPreDate = (rule, value, callback) => {
-      const dateMat = new Date(this.$route.query.setDate * 1)
+      const dateMat = new Date(this.$route.params.setDate * 1)
       const setyear = dateMat.getFullYear()
       const setmonth = dateMat.getMonth() + 1
       const setday = dateMat.getDate()
@@ -59,25 +56,23 @@ export default {
       if (!value) {
         return callback(new Error('请选择预计完成日期'))
       }
-      if (pre[0] < setyear) {
+      if (parseInt(pre[0]) < setyear) {
         return callback(new Error('预计完成日期不能小于设定日期'))
-      } else {
-        if (pre[1] < setmonth) {
-          return callback(new Error('预计完成日期不能小于设定日期'))
-        } else {
-          if (pre[2] < setday) {
-            return callback(new Error('预计完成日期不能小于设定日期'))
-          }
-        }
+      }
+      if (parseInt(pre[1]) < setmonth && parseInt(pre[0]) === setyear) {
+        return callback(new Error('预计完成日期不能小于设定日期'))
+      }
+      if (parseInt(pre[2]) < setday && parseInt(pre[0]) === setyear && parseInt(pre[1]) === setmonth) {
+        return callback(new Error('预计完成日期不能小于设定日期'))
       }
       callback()
     }
     return {
       goalForm: {
-        goalNum: this.$route.query.goalNum,
-        goalName: this.$route.query.goalName,
-        goalLevel: this.$route.query.goalLevel,
-        completeStatus: this.$route.query.completeStatus,
+        goalNum: this.$route.params.goalNum,
+        goalName: this.$route.params.goalName,
+        goalLevel: this.$route.params.goalLevel,
+        completeStatus: this.$route.params.completeStatus,
         setDate: null,
         preDate: null
       },
@@ -95,15 +90,15 @@ export default {
     }
   },
   mounted () {
-    if (this.$route.query.preDate != null) {
-      const dateMat = new Date(this.$route.query.preDate * 1)
+    if (this.$route.params.preDate != null) {
+      const dateMat = new Date(this.$route.params.preDate * 1)
       const year = dateMat.getFullYear()
       const month = dateMat.getMonth() + 1
       const day = dateMat.getDate().length === 1 ? '0' + dateMat.getDate() : dateMat.getDate()
       this.goalForm.preDate = year + '-' + month + (day.toString().length === 1 ? ('-0' + day) : ('-' + day))
     }
-    if (this.$route.query.setDate != null) {
-      const dateMat = new Date(this.$route.query.setDate * 1)
+    if (this.$route.params.setDate != null) {
+      const dateMat = new Date(this.$route.params.setDate * 1)
       const year = dateMat.getFullYear()
       const month = dateMat.getMonth() + 1
       const day = dateMat.getDate()
@@ -139,18 +134,22 @@ export default {
     },
     resetForm (formName) {
       this.$refs[formName].resetFields()
+    },
+    returnNav () {
+      this.$router.push({path: '/nav', name: 'nav', params: {modIdd: '001', nickName: this.$route.params.name}})
     }
   }
 }
 </script>
 
-<style >
+<style scoped>
 .add{
   padding: 20px;
-  border: 1px solid #B3C0D1;
+  border: 1px solid #282e35;
   width: 40%;
   margin-left: 30%;
-  background-color: #b6d4e2;
+  color: #ffffff;
+  background-color: #869a9673;
 }
 
 .title{
@@ -159,26 +158,15 @@ export default {
   font-size: 20px;
 }
 
-.el-header {
-  background-color: #B3C0D1;
-  color: #3d8380;
-  text-align: center;
-  min-height: 100px;
-  font-size: large;
-  font-weight: bold;
-  padding: 0;
-}
-
-.el-main {
-  background-color: #E9EEF3;
+.goalMain {
   color: #333;
   text-align: center;
-  height: 500px;
+  height: 600px;
+  background: url('../../static/images/dong1.gif')  no-repeat;
+  background-size:100% 100%;
 }
-  .el-form-item__content{
-    text-align: left;
-  }
-  .el-select{
-    width: 100%;
-  }
+
+.el-select{
+  width: 100%;
+}
 </style>

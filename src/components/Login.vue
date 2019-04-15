@@ -8,14 +8,14 @@
           <div class="transition-box">
             <span style="color: #f56c6c">{{message}}</span>
             <el-form  label-position="right"
-                     :rules="rules"
+                     :rules="rules" status-icon
                      ref="form" :model="form" label-width="80px">
 
               <el-form-item label="用户名" prop="userId">
                 <el-input v-model="form.userId"></el-input>
               </el-form-item>
               <el-form-item label="密码" prop="password">
-                <el-input v-model="form.password"></el-input>
+                <el-input type="password" v-model="form.password" autocomplete="off"></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary"  style="margin-left: -80px;" @click="onSubmit">登录</el-button>
@@ -36,7 +36,7 @@ export default {
   data () {
     return {
       show: true,
-      title: '进入我的人生',
+      title: 'Enter My Life',
       message: '',
       form: {
         userId: '',

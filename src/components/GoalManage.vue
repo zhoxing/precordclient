@@ -1,105 +1,98 @@
 <template>
-  <div id="recordManage">
-    <el-container>
-      <el-header>
-        小标提醒:当前还有<span>{{count}}</span>个目标没有完成哦!我还是不是你最爱的宝宝了||_||
-      </el-header>
-      <el-main>
-        <el-row>
-          <div class="main-header">目标管理</div>
-        </el-row>
-        <el-row>
-          <el-col :span="6">
-            <span>设定日期:</span>
-            <el-date-picker
-              v-model="setDate"
-              align="right"
-              type="date" value-format="yyyy-MM-dd"
-              placeholder="选择日期"
-              :picker-options="pickerOptions">
-            </el-date-picker>
-          </el-col>
-          <el-col :span="6">
-            <span>目标名称:</span>
-            <el-input style="width: auto" placeholder="请输入目标名称" v-model="goalName" clearable></el-input>
-          </el-col>
-          <el-col :span="6">
-            <span>目标级别:</span>
-            <el-select style="width: 70%" v-model="goalLevel" clearable placeholder="请选择">
-              <el-option
-                v-for="item in levelList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-col>
-          <el-col :span="6">
-            <span>完成状态:</span>
-            <el-select style="width: 70%" v-model="completeStatus" clearable placeholder="请选择">
-              <el-option
-                v-for="item in statusList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-col>
-        </el-row>
-        <el-row type="flex" class="row-bg" justify="end">
-          <router-link to="/addGoal">
-          <el-button type="primary" class="goal-button" icon="el-icon-plus">
-            新增
-          </el-button>
-          </router-link>
-          <el-button type="primary" class="goal-button" icon="el-icon-edit" @click="toEditGoal">
-            编辑
-          </el-button>
-          <el-button type="primary" class="goal-button" icon="el-icon-search" @click="queryGoalList">
-            查询
-          </el-button>
-        </el-row>
-        <el-table  highlight-current-row @current-change="handleCurrent"
-          :data="goalList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
-          style="width: 100%"
-          :row-class-name="tableRowClassName">
-          <el-table-column
-            prop="goalNum"
-            label="目标编号"
-            width="180">
-          </el-table-column>
-          <el-table-column
-            prop="goalName"
-            label="目标名称"
-            width="180">
-          </el-table-column>
-          <el-table-column :formatter="levelFormat"
-            prop="goalLevel"
-            label="目标级别">
-          </el-table-column>
-          <el-table-column :formatter="statusFormat"
-            prop="completeStatus"
-            label="完成状态">
-          </el-table-column>
-          <el-table-column :formatter="dateFormat"
-            prop="setDate"
-            label="目标拟定时间">
-          </el-table-column>
-          <el-table-column :formatter="dateFormat"
-            prop="preDate"
-            label="目标预计完成时间">
-          </el-table-column>
-        </el-table>
-      </el-main>
-    </el-container>
+  <div id="goalManage">
+    <el-row>
+      <div class="main-header">目标管理</div>
+    </el-row>
+    <el-row>
+      <el-col :span="6">
+        <span>设定日期:</span>
+        <el-date-picker style="width: 70%"
+          v-model="setDate"
+          align="right"
+          type="date" value-format="yyyy-MM-dd"
+          placeholder="选择日期"
+          :picker-options="pickerOptions">
+        </el-date-picker>
+      </el-col>
+      <el-col :span="6">
+        <span>目标名称:</span>
+        <el-input style="width: 70%" placeholder="请输入目标名称" v-model="goalName" clearable></el-input>
+      </el-col>
+      <el-col :span="6">
+        <span>目标级别:</span>
+        <el-select style="width: 70%" v-model="goalLevel" clearable placeholder="请选择">
+          <el-option
+            v-for="item in levelList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-col>
+      <el-col :span="6">
+        <span>完成状态:</span>
+        <el-select style="width: 70%" v-model="completeStatus" clearable placeholder="请选择">
+          <el-option
+            v-for="item in statusList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-col>
+    </el-row>
+    <el-row type="flex" class="row-bg" justify="end">
+      <router-link :to="{path:'/addGoal',name:'addGoal',params:{name:name}}">
+        <el-button type="primary" class="goal-button" icon="el-icon-plus">
+          新增
+        </el-button>
+      </router-link>
+      <el-button type="primary" class="goal-button" icon="el-icon-edit" @click="toEditGoal">
+        编辑
+      </el-button>
+      <el-button type="primary" class="goal-button" icon="el-icon-search" @click="queryGoalList">
+        查询
+      </el-button>
+    </el-row>
+    <el-table  highlight-current-row @current-change="handleCurrent"
+               :data="goalList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+               style="width: 100%"
+               :row-class-name="tableRowClassName">
+      <el-table-column
+        prop="goalNum"
+        label="目标编号"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="goalName"
+        label="目标名称"
+        width="180">
+      </el-table-column>
+      <el-table-column :formatter="levelFormat"
+                       prop="goalLevel"
+                       label="目标级别">
+      </el-table-column>
+      <el-table-column :formatter="statusFormat"
+                       prop="completeStatus"
+                       label="完成状态">
+      </el-table-column>
+      <el-table-column :formatter="dateFormat"
+                       prop="setDate"
+                       label="目标拟定时间">
+      </el-table-column>
+      <el-table-column :formatter="dateFormat"
+                       prop="preDate"
+                       label="目标预计完成时间">
+      </el-table-column>
+    </el-table>
     <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="currentPage"
       :page-sizes="[5, 10, 20, 40]"
-    :page-size="pageSize"
-    layout="total, sizes, prev, pager, next, jumper"
-    :total="goalList.length">
+      :page-size="pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="goalList.length">
     </el-pagination>
   </div>
 </template>
@@ -107,6 +100,7 @@
 <script>
 export default {
   name: 'GoalManage',
+  props: ['name'],
   data () {
     return {
       setDate: null,
@@ -162,7 +156,6 @@ export default {
         }]
       },
       goalList: [],
-      count: 0,
       currentPage: 1,
       pageSize: 10
     }
@@ -174,7 +167,7 @@ export default {
     }).then((response) => {
       if (response.data.flag === 'success') {
         this.goalList = response.data.goalList
-        this.count = response.data.count
+        this.$emit('count', response.data.count)
       }
     }).catch((err) => {
       console.log(err)
@@ -202,7 +195,7 @@ export default {
         })
         return
       }
-      this.$router.push({path: '/editGoal', query: {goalNum: this.currentRow.goalNum, goalName: this.currentRow.goalName, goalLevel: this.currentRow.goalLevel, completeStatus: this.currentRow.completeStatus, setDate: this.currentRow.setDate, preDate: this.currentRow.preDate}})
+      this.$router.push({path: '/editGoal', name: 'editGoal', params: {name: name, goalNum: this.currentRow.goalNum, goalName: this.currentRow.goalName, goalLevel: this.currentRow.goalLevel, completeStatus: this.currentRow.completeStatus, setDate: this.currentRow.setDate, preDate: this.currentRow.preDate}})
     },
     dateFormat (row, column, cellValue, index) {
       const daterc = row[column.property]
@@ -279,10 +272,14 @@ export default {
     background-color: #E9EEF3;
     color: #333;
     text-align: center;
-    height: 500px;
-
   }
-
+  .el-aside {
+    background-color: #D3DCE6;
+    color: #3d8380;
+    text-align: center;
+    min-height: 600px;
+    line-height: 30px;
+  }
   .main-header {
     color: #039be5;
     font-weight: bold;
