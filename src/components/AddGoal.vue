@@ -48,7 +48,6 @@
 <script>
 export default {
   name: 'AddGoal',
-  props: ['name'],
   data () {
     const checkSetDate = (rule, value, callback) => {
       if (!value) {
@@ -137,7 +136,7 @@ export default {
                 message: '目标成功添加,继续下一步阶段设置!',
                 type: 'success'
               })
-              this.$router.push({path: '/addStage', query: {goalNum: response.data.goalNum, nickName: this.$route.params.name}})
+              this.$router.push({path: '/addStage', query: {goalNum: response.data.goalNum, nickName: this.$route.params.nickName}})
             }
           }).catch((err) => {
             this.$message.error(err)
@@ -152,7 +151,7 @@ export default {
       this.$refs[formName].resetFields()
     },
     returnNav () {
-      this.$router.push({path: '/nav', name: 'nav', params: {modIdd: '001', nickName: this.$route.params.name}})
+      this.$router.push({path: '/nav', name: 'nav', params: {modIdd: '001', nickName: this.$route.params.nickName}})
     }
   }
 }

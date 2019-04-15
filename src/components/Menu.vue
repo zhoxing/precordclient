@@ -1,6 +1,6 @@
 <template>
   <div id="menu">
-    <h2 style="color: #ffffff">{{name}}</h2>
+    <h2 style="color: #ffffff">{{nickName}}</h2>
     <el-menu
       :default-active="menuId"
        style="border-right: none;text-align: left"
@@ -25,7 +25,7 @@ export default {
       queryModuleList: []
     }
   },
-  props: ['name', 'menuId'],
+  props: ['nickName', 'menuId'],
   mounted: function () {
     this.$axios({
       method: 'post',

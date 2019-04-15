@@ -136,7 +136,7 @@ export default {
       this.$refs[formName].resetFields()
     },
     returnNav () {
-      this.$router.push({path: '/nav', name: 'nav', params: {modIdd: '001', nickName: this.$route.params.name}})
+      this.$router.push({path: '/nav', name: 'nav', params: {modIdd: '001', nickName: this.$route.params.nickName}})
     }
   }
 }

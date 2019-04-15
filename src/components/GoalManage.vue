@@ -42,7 +42,7 @@
       </el-col>
     </el-row>
     <el-row type="flex" class="row-bg" justify="end">
-      <router-link :to="{path:'/addGoal',name:'addGoal',params:{name:name}}">
+      <router-link :to="{path:'/addGoal',name:'addGoal',params:{nickName:nickName}}">
         <el-button type="primary" class="goal-button" icon="el-icon-plus">
           新增
         </el-button>
@@ -100,7 +100,7 @@
 <script>
 export default {
   name: 'GoalManage',
-  props: ['name'],
+  props: ['nickName'],
   data () {
     return {
       setDate: null,
@@ -195,7 +195,7 @@ export default {
         })
         return
       }
-      this.$router.push({path: '/editGoal', name: 'editGoal', params: {name: name, goalNum: this.currentRow.goalNum, goalName: this.currentRow.goalName, goalLevel: this.currentRow.goalLevel, completeStatus: this.currentRow.completeStatus, setDate: this.currentRow.setDate, preDate: this.currentRow.preDate}})
+      this.$router.push({path: '/editGoal', name: 'editGoal', params: {nickName: this.nickName, goalNum: this.currentRow.goalNum, goalName: this.currentRow.goalName, goalLevel: this.currentRow.goalLevel, completeStatus: this.currentRow.completeStatus, setDate: this.currentRow.setDate, preDate: this.currentRow.preDate}})
     },
     dateFormat (row, column, cellValue, index) {
       const daterc = row[column.property]
